@@ -1,0 +1,11 @@
+#secrets file
+secret.h
+
+.devcontainer/
+.vscode/
+build/
+sdkconfig
+sdkconfig.old
+sdkconfig.ci
+managed_components/
+dependencies.lock
