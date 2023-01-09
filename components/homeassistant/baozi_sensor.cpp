@@ -4,8 +4,8 @@
 
 namespace Baozi::HA
 {
-    Sensor::Sensor(Sensor::Config &&config) : m_name(AddMacToName(config.name)),
-                                              m_config(std::move(config))
+    Sensor::Sensor(const Sensor::Config &config) : m_name(AddMacToName(config.name)),
+                                                   m_config(config)
     {
     }
 
@@ -17,7 +17,7 @@ namespace Baozi::HA
             return eResult::INVALID_STATE;
         }
 
-        std::string value_template = std::string("{{ value_json.") + m_config.state_name + " }}";
+        std::string value_template = std::string("{{ value_json.") + m_config.state_name + " | round(2) }}";
 
         BaoJson json{
             KV{"name", m_name},

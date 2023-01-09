@@ -1,29 +1,33 @@
-#ifndef _BAOZI_DHT_DRIVER_H__
-#define _BAOZI_DHT_DRIVER_H__
+#ifndef DHT_DRIVER_H
+#define DHT_DRIVER_H
 
-#include "baozi_gpio.h"
+#include "driver/gpio.h"
 
-namespace Baozi::DHT
+class DHTDriver
 {
+
+public:
     enum eDHTResult
     {
         DHT_OK = 0,
-        DHT_TIMEOUT,
-        DHT_CHECKSUM_ERROR,
-        DHT_INVALID_ARGUMENT,
-        DHT_ERROR
+        DHT_CHECKSUM_ERROR = -1,
+        DHT_TIMEOUT_ERROR = -2
     };
 
-    class Driver
-    {
-    public:
-        Driver(int pin, uint32_t timeout = 1000);
-        eDHTResult Read(float &temperature, float &humidity);
+    DHTDriver();
 
-    private:
-        GPIO m_pin;
-        uint32_t m_timeout;
-    };
-} // namespace Baozi::DHT
+    void setDHTgpio(gpio_num_t gpio);
+    void errorHandler(eDHTResult response);
+    eDHTResult readDHT();
+    float getHumidity();
+    float getTemperature();
+
+private:
+    gpio_num_t DHTgpio;
+    float humidity = 0.;
+    float temperature = 0.;
+
+    int getSignalLevel(int usTimeOut, bool state);
+};
 
 #endif

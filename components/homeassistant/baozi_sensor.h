@@ -8,6 +8,7 @@
 #include "baozi_mqtt.h"
 #include "baozi_result.h"
 #include "baozi_device_manager.h"
+#include <math.h>
 
 namespace Baozi::HA
 {
@@ -23,7 +24,7 @@ namespace Baozi::HA
             const char *state_name;
         };
 
-        Sensor(Config &&config);
+        Sensor(const Config &config);
 
         eResult Register();
 
@@ -45,7 +46,7 @@ namespace Baozi::HA
 
     private:
         std::string m_name;
-        Config m_config;
+        const Config &m_config;
 
         std::string state_topic();
         std::string config_topic();
