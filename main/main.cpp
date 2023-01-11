@@ -3,6 +3,7 @@
 #include "baozi_binary_sensor.h"
 #include "baozi_device_manager.h"
 #include "baozi_bh1750.h"
+#include "baozi_presence.h"
 
 using namespace Baozi;
 constexpr auto PRINT_DELAY = 5_sec;
@@ -10,6 +11,7 @@ constexpr auto PRINT_DELAY = 5_sec;
 extern "C" void app_main(void)
 {
     PirSensor pirSensor(27, HA::BinarySensor{"pir", "motion"});
+    PresenceSensor presenceSensor(28, HA::BinarySensor{"presence", "occupancy"});
     DHTSensor dhtSensor(26,
                         HA::Sensor{HA::TEMPERATURE_SENSOR_CONFIG},
                         HA::Sensor{HA::HUMIDITY_SENSOR_CONFIG});
@@ -19,6 +21,7 @@ extern "C" void app_main(void)
     manager.RegisterComponent((I_IndependentComponent *)&pirSensor);
     manager.RegisterComponent((I_PollingComponent *)&dhtSensor);
     manager.RegisterComponent((I_PollingComponent *)&bh1750);
+    manager.RegisterComponent((I_PollingComponent *)&presenceSensor);
 
     manager.Run();
 }
