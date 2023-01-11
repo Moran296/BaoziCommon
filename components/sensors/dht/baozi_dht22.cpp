@@ -31,6 +31,7 @@ namespace Baozi
         DHTDriver::eDHTResult result = m_dht.readDHT();
         if (result != DHTDriver::DHT_OK)
         {
+            BAO_LOG_ERROR("DHT read failed: %d", (int)result);
             return;
         }
 

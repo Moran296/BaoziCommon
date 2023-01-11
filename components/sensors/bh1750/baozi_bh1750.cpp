@@ -6,19 +6,37 @@ namespace Baozi
 
     BH1750::BH1750(HA::Sensor &&sensor) : m_sensor(std::move(sensor))
     {
+        m_isInitialized = init();
+    }
+
+    bool BH1750::init()
+    {
         eResult res = m_driver.PowerOn();
         if (res != eResult::SUCCESS)
+        {
             BAO_LOG_ERROR("BH1750 failed powering on: %d", static_cast<int>(res));
+            return false;
+        }
 
         res = m_driver.SetMode(BH1750Driver::eMode::BH1750_CONTINUE_1LX_RES);
         if (res != eResult::SUCCESS)
+        {
             BAO_LOG_ERROR("BH1750 failed setting mode: %d", static_cast<int>(res));
+            return false;
+        }
 
         BAO_LOG_WARNING("BH1750 initialized");
+        return true;
     }
 
     void BH1750::Poll()
     {
+        if (!m_isInitialized)
+        {
+            m_isInitialized = init();
+            return;
+        }
+
         auto result = m_driver.GetData();
         if (!result.has_value())
         {

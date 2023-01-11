@@ -25,6 +25,9 @@ namespace Baozi
         HA::Sensor m_sensor;
         uint64_t m_lastPublish = 0;
         float m_lastValue = 0;
+        bool m_isInitialized = false;
+
+        bool init();
     };
 
 }
