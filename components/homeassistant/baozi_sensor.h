@@ -68,7 +68,7 @@ namespace Baozi::HA
 
     static inline constexpr Sensor::Config LIGHT_SENSOR_CONFIG = {
         .name = "light",
-        .unit_of_measurement = "lx", // could be also "%" if one would like to convert
+        .unit_of_measurement = "lx",
         .device_class = "illuminance",
         .state_name = "light"};
 
