@@ -5,12 +5,11 @@
 
 #define MQTT_SRV "_mqtt"
 #define MQTT_PROTO "_tcp"
-#define DEVICE_NAME "BAOZI" // TODO get from config
 
 namespace Baozi
 {
 
-    bool Mdns::Init()
+    bool Mdns::Init(const char* hostname)
     {
         esp_err_t err = mdns_init();
         if (err != ESP_OK)
@@ -19,7 +18,7 @@ namespace Baozi
             return false;
         }
 
-        if (mdns_hostname_set(DEVICE_NAME) != ESP_OK)
+        if (mdns_hostname_set(hostname) != ESP_OK)
         {
             ESP_LOGW("MDNS", "mdns hostname set failed");
             return false;
@@ -32,12 +31,16 @@ namespace Baozi
     {
 
         if (mdns_service_add(MQTT_SRV, MQTT_PROTO, "_tcp", 1883, NULL, 0) != ESP_OK)
-        {
             ESP_LOGW("MDNS", "mdns service add failed");
-            // return eResult::ERROR_GENERAL;
-        }
 
-        // return eResult::SUCCESS;
+    }
+
+    void Mdns::AdvertiseBaozi()
+    {
+
+        if (mdns_service_add(nullptr, MQTT_SRV, MQTT_PROTO, 1883, NULL, 0) != ESP_OK)
+            ESP_LOGW("MDNS", "baozi service add failed");
+
     }
 
     void macToString(uint8_t *mac, char *str)
@@ -70,13 +73,11 @@ namespace Baozi
         if (err != ESP_OK)
         {
             ESP_LOGW("MDNS", "couldn't find broker. err %d", err);
-            // return eResult::ERROR_CONNECTION_FAILURE;
             return std::nullopt;
         }
         if (results == nullptr)
         {
             ESP_LOGW("MDNS", "couldn't find broker. no results");
-            // return eResult::ERROR_NOT_FOUND;
             return std::nullopt;
         }
 
@@ -95,7 +96,6 @@ namespace Baozi
         if (err != ESP_OK)
         {
             ESP_LOGW("MDNS", "couldn't find home assistant. err %d", err);
-            // return eResult::ERROR_CONNECTION_FAILURE;
             return std::nullopt;
         }
 

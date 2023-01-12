@@ -24,6 +24,7 @@ namespace Baozi
         MqttClient m_mqtt;
 
         void connect_wifi();
+        void mdns_init();
         std::string get_ha_ip();
         void connect_mqtt();
         static inline char DEVICE_NAME[32]{};

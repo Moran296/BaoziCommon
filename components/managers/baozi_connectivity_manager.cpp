@@ -13,7 +13,11 @@ namespace Baozi
     ConnectivityManager::ConnectivityManager() {}
     void ConnectivityManager::Init()
     {
+        std::string name = HA::AddMacToName("baozi");
+        strcpy(DEVICE_NAME, name.c_str());
+
         connect_wifi();
+        mdns_init();
         connect_mqtt();
     }
 
@@ -30,11 +34,14 @@ namespace Baozi
         }
     }
 
+    void ConnectivityManager::mdns_init() {
+        configASSERT(Mdns::Init(DEVICE_NAME) == true);
+        Mdns::AdvertiseBaozi();
+    }
+
     std::string ConnectivityManager::get_ha_ip()
     {
-        Mdns::Init();
         std::string ip;
-
         bool found = BaoTry{[&ip]()
                             {
                 if (auto res = Mdns::FindHomeAssistant(); res.has_value())
@@ -56,8 +63,6 @@ namespace Baozi
     void ConnectivityManager::connect_mqtt()
     {
         std::string ip = get_ha_ip();
-        std::string name = HA::AddMacToName("baozi");
-        strcpy(DEVICE_NAME, name.c_str());
 
         auto onConnectCallback = [this]()
         {
