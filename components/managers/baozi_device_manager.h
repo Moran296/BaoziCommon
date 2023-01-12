@@ -4,6 +4,7 @@
 #include "baozi_connectivity_manager.h"
 #include "baozi_component.h"
 #include "baozi_time_units.h"
+#include "baozi_fota.h"
 
 namespace Baozi
 {
@@ -31,6 +32,7 @@ namespace Baozi
         ConnectivityManager m_connectivityManager;
         std::vector<I_IndependentComponent *> m_independentComponents;
         std::vector<I_PollingComponent *> m_pollingComponents;
+        FotaHandler m_fotaHandler;
     };
 }
 

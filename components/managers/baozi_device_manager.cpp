@@ -13,6 +13,7 @@ namespace Baozi
     {
         m_connectivityManager.Init();
         wait_for_connection();
+        m_fotaHandler.Init();
         register_components();
 
         m_isRunning = true;
