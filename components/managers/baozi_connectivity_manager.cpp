@@ -13,8 +13,7 @@ namespace Baozi
     ConnectivityManager::ConnectivityManager() {}
     void ConnectivityManager::Init()
     {
-        std::string name = HA::AddMacToName("baozi");
-        strcpy(DEVICE_NAME, name.c_str());
+        strcpy(DEVICE_NAME, HA::GetDeviceName().c_str());
 
         connect_wifi();
         mdns_init();
@@ -34,7 +33,8 @@ namespace Baozi
         }
     }
 
-    void ConnectivityManager::mdns_init() {
+    void ConnectivityManager::mdns_init()
+    {
         configASSERT(Mdns::Init(DEVICE_NAME) == true);
         Mdns::AdvertiseBaozi();
     }

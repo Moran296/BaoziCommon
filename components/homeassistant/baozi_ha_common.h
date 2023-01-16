@@ -8,10 +8,9 @@ namespace Baozi
     namespace HA
     {
 
-        static inline constexpr const char *DEVICE_NAME = "BAOZI_TEST";
         static inline constexpr const char *SWITCH_ICON = "mdi:toggle-switch";
 
-        inline std::string AddMacToName(const char *name)
+        inline std::string GetDeviceName()
         {
             static char mac[10]{0};
             static char macStr[10]{0};
@@ -21,7 +20,12 @@ namespace Baozi
                 snprintf(macStr, sizeof(macStr), "%02X%02X%02X", mac[3], mac[4], mac[5]);
             }
 
-            return std::string(name) + "_" + macStr;
+            return std::string("baozi") + "_" + macStr;
+        }
+
+        inline std::string AddDeviceNamePrefix(const char *name)
+        {
+            return GetDeviceName() + "/" + name;
         }
 
     } // HA

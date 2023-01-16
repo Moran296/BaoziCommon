@@ -5,7 +5,7 @@
 namespace Baozi::HA
 {
 
-    BinarySensor::BinarySensor(const char *name, const char *device_class) : m_name(AddMacToName(name)),
+    BinarySensor::BinarySensor(const char *name, const char *device_class) : m_name(AddDeviceNamePrefix(name)),
                                                                              m_device_class(device_class) {}
 
     eResult BinarySensor::Register()

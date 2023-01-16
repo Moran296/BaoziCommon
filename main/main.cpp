@@ -10,9 +10,9 @@ constexpr auto PRINT_DELAY = 5_sec;
 
 extern "C" void app_main(void)
 {
-    PirSensor pirSensor(27, HA::BinarySensor{"pir", "motion"});
+    PirSensor pirSensor(26, HA::BinarySensor{"pir", "motion"});
     PresenceSensor presenceSensor(32, HA::BinarySensor{"presence", "occupancy"});
-    DHTSensor dhtSensor(26,
+    DHTSensor dhtSensor(27,
                         HA::Sensor{HA::TEMPERATURE_SENSOR_CONFIG},
                         HA::Sensor{HA::HUMIDITY_SENSOR_CONFIG});
     BH1750 bh1750(HA::Sensor{HA::LIGHT_SENSOR_CONFIG});

@@ -4,7 +4,7 @@
 
 namespace Baozi::HA
 {
-    Sensor::Sensor(const Sensor::Config &config) : m_name(AddMacToName(config.name)),
+    Sensor::Sensor(const Sensor::Config &config) : m_name(AddDeviceNamePrefix(config.name)),
                                                    m_config(config)
     {
     }
