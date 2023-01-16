@@ -2,6 +2,7 @@
 #include "mdns.h"
 #include "esp_wifi.h"
 #include <esp_log.h>
+#include <esp_app_desc.h>
 
 #define MQTT_SRV "_mqtt"
 #define MQTT_PROTO "_tcp"
@@ -9,7 +10,7 @@
 namespace Baozi
 {
 
-    bool Mdns::Init(const char* hostname)
+    bool Mdns::Init(const char *hostname)
     {
         esp_err_t err = mdns_init();
         if (err != ESP_OK)
@@ -32,15 +33,16 @@ namespace Baozi
 
         if (mdns_service_add(MQTT_SRV, MQTT_PROTO, "_tcp", 1883, NULL, 0) != ESP_OK)
             ESP_LOGW("MDNS", "mdns service add failed");
-
     }
 
     void Mdns::AdvertiseBaozi()
     {
+        // get version from cmake
+        const esp_app_desc_t *desc = esp_app_get_description();
+        mdns_txt_item_t txt[] = {{"version", desc->version ? desc->version : "unknown"}};
 
-        if (mdns_service_add(nullptr, MQTT_SRV, MQTT_PROTO, 1883, NULL, 0) != ESP_OK)
+        if (mdns_service_add(nullptr, MQTT_SRV, MQTT_PROTO, 1883, txt, 1) != ESP_OK)
             ESP_LOGW("MDNS", "baozi service add failed");
-
     }
 
     void macToString(uint8_t *mac, char *str)

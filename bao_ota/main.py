@@ -1,5 +1,6 @@
 import socket
 from time import sleep
+import datetime
 import os
 import json
 import re
@@ -20,13 +21,23 @@ def get_bin_file():
     if not os.path.exists(bin_file):
         dd("Bin file not found, please build the project first")
 
-    print("found bin file: " + bin_file)
+    compile_time = datetime.datetime.fromtimestamp(os.path.getmtime(bin_file))
+
+    print("found bin file: " + bin_file + " compiled at " + str(compile_time))
     return bin_file
+
+def get_current_version():
+    with open("../CMakeLists.txt") as f:
+        for line in f:
+            if "set(PROJECT_VER" in line:
+                return line.split(" ")[1].replace('"', "").replace(')', "").replace('\n', "")
+
 
 # Configs
 PORT = 3232
+VERSION = get_current_version()
 FILE = get_bin_file()
-ADDRESSES = get_baozi_addresses("baozi", 5)
+INSTANCES = get_baozi_addresses("baozi", 5)
 
 # Constans
 DOWNLOAD_BATCH = 1024
@@ -109,13 +120,13 @@ def config_validate():
     if not FILE[-4:] == (FILE_ALLOWED_EXTENSION):
         print("Wrong file extention")
         return False
-    
-    if len(ADDRESSES) == 0:
+
+    if len(INSTANCES) == 0:
         print("No targets found in the network")
         return False
 
-    for value in ADDRESSES.values():
-        if not re.match(IP_REGEX, value):
+    for value in INSTANCES.values():
+        if not re.match(IP_REGEX, value["ip"]):
             print("Wrong IP format")
             return False
 
@@ -127,16 +138,15 @@ def config_validate():
 
 # Program starts here
 if __name__ == "__main__":
-    print(FILE)
-
     if not config_validate():
         dd("Config validate failed, aborting...")
 
-    for name, ip in ADDRESSES.items():
-        shouldUpdate = input(f"Update {name}? [y/n] ")
+    for name, info in INSTANCES.items():
+        v = "version"
+        shouldUpdate = input(f"\nUpdate {name} {info[v]} -> {VERSION} ? [y/n] ")
         if shouldUpdate != "y":
             continue
-        if identity_phase(ip):
+        if identity_phase(info["ip"]):
             sleep(1)
             transfer_data()
 
